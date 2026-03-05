@@ -1,10 +1,12 @@
 ## Project reproducing the classloading issue of classpath.tsv.gz
 
 This project reproduces the issue that we observe to load the resource `classpath.tsv.gz` packaged under `META-INF/rewrite`
-of by example the following GAV `org.openrewrite.recipe:rewrite-java-dependencies:1.51.1` using an URLClassloader extending the AppClassloader.
+of, by example, the following GAV `org.openrewrite.recipe:rewrite-java-dependencies:1.51.1` using an URLClassloader extending the `AppClassloader`.
 
-The problem takes place when OpenRewrite runs a recipe like `ReplaceAnnotation` where we access on the `JavaParser` class the method `classpathFromResources(Context,String )` 
-able to search about such a resource. As you can see hereafter the current code uses as ClassLoader the classloader having loaded `JavaParser` class
+The problem takes place when OpenRewrite runs a recipe like `ReplaceAnnotation` where they access on the `JavaParser` class the method `classpathFromResources(Context,String )` 
+able to search about such a resource. 
+
+As you can see hereafter the current code uses as ClassLoader the classloader which loaded the `JavaParser` class
 and not at all the URLClassloader created using Environment and `Environment.Collection<? extends ResourceLoader> resourceLoaders;`
 
 ```java
