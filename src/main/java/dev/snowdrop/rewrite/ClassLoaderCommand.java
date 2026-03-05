@@ -11,6 +11,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Vector;
 
 import static dev.snowdrop.rewrite.utils.JavaParserCaller.findCaller;
 
@@ -24,7 +25,7 @@ public class ClassLoaderCommand implements Runnable {
             names = {"--jar"},
             description = "Additional JAR files containing recipes (file paths or Maven GAV coordinates, can be specified multiple times or comma-separated)",
             split = ",",
-            defaultValue = "org.openrewrite.recipe:rewrite-java-dependencies:1.51.1"
+            defaultValue = "org.openrewrite.recipe:rewrite-spring-to-quarkus:0.6.0"
     )
     List<String> additionalJarPaths = new ArrayList<>();
 
@@ -44,8 +45,13 @@ public class ClassLoaderCommand implements Runnable {
             assert extendedLoader != null;
 
             logger.infof("=== We can find classpath.tsv.gz file using the URLClassLoader within the additional JAR loaded :-)");
+            Vector<URL> resources = new Vector<>();
             for (Enumeration<URL> e = extendedLoader.getResources(DEFAULT_RESOURCE_PATH); e.hasMoreElements(); ) {
-                logger.infof("=== Resource found here: %s", e.nextElement());
+                resources.add(e.nextElement());
+            }
+
+            for(URL url : resources) {
+                logger.infof("=== Resource found here: %s", url);
             }
 
             ClassLoader javaParserClassLoader = findCaller().getClassLoader();

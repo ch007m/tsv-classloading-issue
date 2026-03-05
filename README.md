@@ -45,5 +45,20 @@ mvn quarkus:dev
 ```
 and look the messages logged:
 ```bash
+// JavaParser class is well loaded by the AppClassLoader of Quarkus
+2026-03-05 14:30:47,133 INFO  [dev.sno.rew.ClassLoaderCommand] (Quarkus Main Thread) Class found: org.openrewrite.java.JavaParser in classloader: QuarkusClassLoader:Quarkus Base Runtime ClassLoader: DEV for tsv-classloading-issue-0.1.0-SNAPSHOT@23bb8443. 
 
+// The addtional GAV has been added to a new URLClassLoader
+2026-03-05 14:30:47,187 INFO  [dev.sno.rew.uti.ClassLoaderUtils] (Quarkus Main Thread) Loaded additional JAR: /Users/cmoullia/.m2/repository/org/openrewrite/recipe/rewrite-java-dependencies/1.51.1/rewrite-java-dependencies-1.51.1.jar
+
+2026-03-05 14:40:50,211 INFO  [dev.sno.rew.ClassLoaderCommand] (Quarkus Main Thread) === We can find classpath.tsv.gz file using the URLClassLoader within the additional JAR loaded :-)
+2026-03-05 14:40:50,212 INFO  [dev.sno.rew.ClassLoaderCommand] (Quarkus Main Thread) === Resource found here: jar:file:/Users/cmoullia/.m2/repository/org/openrewrite/recipe/rewrite-spring-to-quarkus/0.6.0/rewrite-spring-to-quarkus-0.6.0.jar!/META-INF/rewrite/classpath.tsv.gz
+
+2026-03-05 14:40:50,215 INFO  [dev.sno.rew.ClassLoaderCommand] (Quarkus Main Thread) JavaParser class found in classloader: QuarkusClassLoader:Quarkus Base Runtime ClassLoader: DEV for tsv-classloading-issue-0.1.0-SNAPSHOT@23bb8443.
+2026-03-05 14:40:50,215 WARN  [dev.sno.rew.ClassLoaderCommand] (Quarkus Main Thread) === We cannot find classpath.tsv.gz file using the ClassLoader of the JavaParser class :-(
+```
+
+To debug and use the remote debugger, execute this command
+```bash
+mvn quarkus:dev -Dsuspend
 ```
